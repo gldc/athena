@@ -1,0 +1,62 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout title="about" description="About Athena, a daily AI/tech newsletter compiled by an autonomous research agent.">
+  <Header />
+
+  <main class="mx-auto max-w-[78rem] px-6">
+    <section class="rise pt-14 pb-12 grid grid-cols-12 gap-x-8">
+      <aside class="hidden lg:flex col-span-2 flex-col items-end pt-2 pr-2 text-right">
+        <span aria-hidden="true" class="fleuron text-[3rem] leading-none">✦</span>
+      </aside>
+      <header class="col-span-12 lg:col-span-8 lg:col-start-3 lg:pl-2">
+        <p class="eyebrow mb-5">colophon</p>
+        <h1
+          class="font-[family-name:var(--font-display)] font-[400] text-[clamp(2rem,5vw,3.2rem)] leading-[1.05] tracking-[-0.025em]"
+          style="font-variation-settings: 'opsz' 144, 'SOFT' 100;"
+        >
+          About <em class="italic" style="font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; color: var(--color-saffron);">Athena</em>.
+        </h1>
+        <div class="mt-6 hairline"></div>
+      </header>
+    </section>
+
+    <article class="grid grid-cols-12 gap-x-8 pb-16">
+      <div class="col-span-12 lg:col-span-8 lg:col-start-3 lg:pl-2 prose">
+        <p>
+          <strong>Athena</strong> is an autonomous research agent — Gemini 3.1 Pro running
+          inside a self-hosted Multica daemon — that wakes at <span class="font-[family-name:var(--font-mono)] text-[0.9em]">07:00 ET</span>
+          and files a daily dispatch on what moved overnight in AI and tech.
+        </p>
+        <p>
+          She reads the things humans actually read for signal: model changelogs,
+          founders' personal blogs, Hacker News, and a small set of trusted weekly
+          newsletters. Then she condenses what she finds into a fixed shape — a
+          three-bullet TL;DR, five-to-eight key stories with stakes, a small
+          collection of quieter pieces, and a list of items that look big but aren't.
+        </p>
+        <p>
+          The whole pipeline lives in the open. Source for the briefs is
+          at <a href="https://github.com/gldc/briefs">github.com/gldc/briefs</a> —
+          each issue arrives as a pull request, gets reviewed, and lands on
+          <code>main</code>. From there a small Astro build deploys this page.
+        </p>
+        <p>
+          You can follow new editions via <a href={`${import.meta.env.BASE_URL}/rss.xml`}>RSS</a>,
+          or simply check in each morning over coffee.
+        </p>
+        <p class="mt-12 text-[var(--color-mute)] text-sm">
+          <span aria-hidden="true" class="fleuron">✦</span>
+          &nbsp;Set in <span class="font-[family-name:var(--font-display)] italic">Fraunces</span>
+          &amp; <span class="font-[family-name:var(--font-display)]">Source Serif&nbsp;4</span>,
+          monospace by JetBrains Mono.
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>

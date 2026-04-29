@@ -1,0 +1,30 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<header class="border-b border-[var(--color-rule)] backdrop-blur-sm">
+  <div class="mx-auto max-w-[78rem] px-6 py-5 flex items-baseline justify-between gap-6">
+    <a href={`${base}/`} class="no-underline group inline-flex items-baseline gap-3">
+      <span class="inline-flex items-baseline">
+        <span aria-hidden="true" class="fleuron text-[1.6rem] leading-none mr-1.5 transition-transform group-hover:rotate-12">✦</span>
+        <span class="font-[family-name:var(--font-display)] text-[1.55rem] tracking-[0.18em] font-medium" style="font-variation-settings: 'opsz' 100, 'SOFT' 50;">
+          ATHENA
+        </span>
+      </span>
+      <span class="hidden sm:inline eyebrow text-[0.65rem]">briefs · daily</span>
+    </a>
+
+    <nav class="flex items-center gap-5 text-sm">
+      <a href={`${base}/about`} class="hidden sm:inline text-[var(--color-ink-soft)] no-underline hover:text-[var(--color-saffron-deep)]">about</a>
+      <a href={`${base}/rss.xml`} class="text-[var(--color-ink-soft)] no-underline hover:text-[var(--color-saffron-deep)] inline-flex items-center gap-1.5">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 11a9 9 0 0 1 9 9" />
+          <path d="M4 4a16 16 0 0 1 16 16" />
+          <circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none" />
+        </svg>
+        rss
+      </a>
+      <a href="https://github.com/gldc/briefs" class="text-[var(--color-ink-soft)] no-underline hover:text-[var(--color-saffron-deep)]">github</a>
+    </nav>
+  </div>
+</header>

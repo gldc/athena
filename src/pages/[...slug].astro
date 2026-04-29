@@ -1,0 +1,134 @@
+---
+import { render } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import {
+  getSortedBriefs,
+  briefDate,
+  briefHref,
+  briefIssueNumber,
+  briefSummary,
+  briefTitle,
+  formatLong,
+  formatShort,
+  type Brief
+} from "../lib/briefs";
+
+export async function getStaticPaths() {
+  const briefs = await getSortedBriefs();
+  return briefs.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, all: briefs }
+  }));
+}
+
+interface Props {
+  entry: Brief;
+  all: Brief[];
+}
+
+const { entry, all } = Astro.props;
+const { Content } = await render(entry);
+
+const number = briefIssueNumber(entry, all);
+const date = briefDate(entry);
+const summary = briefSummary(entry);
+const title = briefTitle(entry);
+
+const idx = all.findIndex((b) => b.id === entry.id);
+const newer = idx > 0 ? all[idx - 1] : null;
+const older = idx < all.length - 1 ? all[idx + 1] : null;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<Layout title={`${formatShort(date)} brief`} description={summary}>
+  <Header />
+
+  <main class="mx-auto max-w-[78rem] px-6">
+    {/* ── Article header ──────────────────────────────────────────────── */}
+    <article class="rise pt-14 pb-10 grid grid-cols-12 gap-x-8">
+      {/* Marginalia: issue number */}
+      <aside class="hidden lg:flex col-span-2 flex-col items-end pt-3 pr-2 text-right">
+        <span
+          class="numeral text-[5.5rem] leading-none text-[var(--color-saffron)] tabular-nums select-none"
+          style="font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;"
+          aria-hidden="true"
+        >№ {String(number).padStart(2, "0")}</span>
+        <span class="mt-3 eyebrow">issue</span>
+      </aside>
+
+      {/* Title block */}
+      <header class="col-span-12 lg:col-span-8 lg:col-start-3 lg:pl-2">
+        <p class="eyebrow mb-5">
+          <a href={`${base}/`} class="no-underline hover:text-[var(--color-saffron-deep)]">← all briefs</a>
+        </p>
+        <p class="lg:hidden numeral text-[2.5rem] leading-none text-[var(--color-saffron)] mb-2 tabular-nums">
+          № {String(number).padStart(2, "0")}
+        </p>
+        <h1
+          class="font-[family-name:var(--font-display)] font-[400] text-[clamp(2rem,5vw,3.4rem)] leading-[1.05] tracking-[-0.025em] text-[var(--color-ink)]"
+          style="font-variation-settings: 'opsz' 144, 'SOFT' 80;"
+        >
+          {formatLong(date)}
+        </h1>
+        <p
+          class="mt-3 font-[family-name:var(--font-display)] text-[1.15rem] italic text-[var(--color-mute)]"
+          style="font-variation-settings: 'opsz' 36, 'SOFT' 100, 'WONK' 1;"
+        >
+          {title}
+        </p>
+
+        <div class="mt-6 hairline"></div>
+      </header>
+    </article>
+
+    {/* ── Article body ────────────────────────────────────────────────── */}
+    <article class="grid grid-cols-12 gap-x-8 pb-16">
+      <div class="col-span-12 lg:col-span-8 lg:col-start-3 lg:pl-2 prose">
+        <Content />
+      </div>
+    </article>
+
+    {/* ── Adjacent navigation ─────────────────────────────────────────── */}
+    {(newer || older) && (
+      <nav class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-[var(--color-rule)] pt-10 pb-4">
+        <div>
+          {older && (
+            <a href={briefHref(older)} class="block group no-underline">
+              <p class="eyebrow mb-2">earlier</p>
+              <p class="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.15em] text-[var(--color-mute)]">
+                {formatShort(briefDate(older))}
+              </p>
+              <p
+                class="mt-1 font-[family-name:var(--font-display)] text-[1.1rem] text-[var(--color-ink)] group-hover:text-[var(--color-saffron-deep)]"
+                style="font-variation-settings: 'opsz' 36;"
+              >
+                ← {formatLong(briefDate(older))}
+              </p>
+            </a>
+          )}
+        </div>
+        <div class="sm:text-right">
+          {newer && (
+            <a href={briefHref(newer)} class="block group no-underline">
+              <p class="eyebrow mb-2">more recent</p>
+              <p class="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.15em] text-[var(--color-mute)]">
+                {formatShort(briefDate(newer))}
+              </p>
+              <p
+                class="mt-1 font-[family-name:var(--font-display)] text-[1.1rem] text-[var(--color-ink)] group-hover:text-[var(--color-saffron-deep)]"
+                style="font-variation-settings: 'opsz' 36;"
+              >
+                {formatLong(briefDate(newer))} →
+              </p>
+            </a>
+          )}
+        </div>
+      </nav>
+    )}
+  </main>
+
+  <Footer />
+</Layout>
