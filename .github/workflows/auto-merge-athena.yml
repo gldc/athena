@@ -11,12 +11,19 @@ permissions:
 
 jobs:
   auto-merge:
+    # Match any of Athena's brief-PR branch shapes. The real safety gate is the
+    # `briefs/YYYY/MM/DD.md` path check below — branch matching only decides
+    # whether this auto-merge/auto-close job engages at all, so keep it broad
+    # enough to catch every naming variant the agent has used:
+    #   brief-…, ai-tech-brief-…, daily-brief-…, tech-brief-…  -> contains 'brief'
+    #   agent/athena/…, agent/deep-research/…                  -> 'agent/' prefix
+    #   athena/tech-brief-…                                    -> 'athena/' prefix
     if: |
       !github.event.pull_request.draft &&
       (
-        startsWith(github.event.pull_request.head.ref, 'agent/deep-research/') ||
-        startsWith(github.event.pull_request.head.ref, 'agent/athena/') ||
-        startsWith(github.event.pull_request.head.ref, 'brief-')
+        contains(github.event.pull_request.head.ref, 'brief') ||
+        startsWith(github.event.pull_request.head.ref, 'agent/') ||
+        startsWith(github.event.pull_request.head.ref, 'athena/')
       )
     runs-on: ubuntu-latest
     steps:
